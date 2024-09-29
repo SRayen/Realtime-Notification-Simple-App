@@ -12,11 +12,7 @@ const Card = ({ post, socket, user }) => {
 
   const handleNotification = (type) => {
     type === 1 && setLiked(true);
-    socket.emit("sendNotification", {
-      senderName: user,
-      receiverName: post.username,
-      type,
-    });
+  
   };
 
   return (

@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
 
   socket.on("sendNotification", ({ senderName, receiverName, type }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit("getNotification", { senderName, type });
+    io.to(receiver?.socketId).emit("getNotification", { senderName, type });
   });
 
   socket.on("disconnect", () => {

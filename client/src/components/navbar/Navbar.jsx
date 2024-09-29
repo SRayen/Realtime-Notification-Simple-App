@@ -6,6 +6,7 @@ import Info from "../../img/info.svg";
 
 function Navbar({ socket }) {
   const [notifications, setNotifications] = useState([]);
+  const [display, setDisplay] = useState(false);
 
   useEffect(() => {
     const handleNotification = (data) => {
@@ -20,27 +21,59 @@ function Navbar({ socket }) {
     };
   }, [socket]);
 
-  console.log("notifications=>", notifications);
+  const displayNotification = (senderName, type, index) => {
+    let action;
+
+    if (type === 1) {
+      action = "liked";
+    } else if (type === 2) {
+      action = "commented";
+    } else {
+      action = "shared";
+    }
+    return (
+      <span
+        className="notification"
+        key={index}
+      >{`${senderName} ${action} your post`}</span>
+    );
+  };
 
   return (
     <div className="navbar">
       <span className="logo">Lama App</span>
       <div className="icons">
-        <div className="icon">
+        <div className="icon" onClick={() => setDisplay(!display)}>
           <img src={Notification} alt="" className="iconImg" />
-          <div className="counter">2</div>
+          {notifications.length > 0 && (
+            <div className="counter">{notifications.length}</div>
+          )}
         </div>
 
         <div className="icon">
           <img src={Message} alt="" className="iconImg" />
-          <div className="counter">2</div>
         </div>
 
         <div className="icon">
           <img src={Info} alt="" className="iconImg" />
-          <div className="counter">2</div>
         </div>
       </div>
+      {display && (
+        <div className="notifications">
+          {notifications.map((n, index) =>
+            displayNotification(n.senderName, n.type, index)
+          )}
+          <button
+            className="nButton"
+            onClick={() => {
+              setDisplay(!display);
+              setNotifications([]);
+            }}
+          >
+            Mark as read
+          </button>
+        </div>
+      )}
     </div>
   );
 }

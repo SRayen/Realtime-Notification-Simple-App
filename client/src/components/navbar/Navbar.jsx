@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import Notification from "../../img/notification.svg";
 import Message from "../../img/message.svg";
 import Info from "../../img/info.svg";
 
-function Navbar() {
+function Navbar({ socket }) {
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const handleNotification = (data) => {
+      setNotifications((prev) => [...prev, data]);
+    };
+
+    socket.on("getNotification", handleNotification);
+
+    // Clean up the previous listener when the component unmounts or socket changes
+    return () => {
+      socket.off("getNotification", handleNotification);
+    };
+  }, [socket]);
+
+  console.log("notifications=>", notifications);
+
   return (
     <div className="navbar">
       <span className="logo">Lama App</span>
